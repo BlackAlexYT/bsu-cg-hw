@@ -1,0 +1,12 @@
+{
+  "name": "segment-lab",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "gallery": "node scripts/build-gallery.cjs",
+    "evaluate": "node scripts/evaluate.cjs",
+    "figures": "node scripts/report-figures.cjs",
+    "build": "node scripts/build.cjs"
+  },
+  "engines": { "node": ">=18" }
+}

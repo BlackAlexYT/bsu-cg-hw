@@ -4,3 +4,8 @@ lab1/report/*.out
 lab1/report/*.pdf
 lab1/color-lab/standalone.html
 lab1/node_modules/
+lab2/report/*.aux
+lab2/report/*.log
+lab2/report/*.out
+lab2/report/*.pdf
+lab2/segment-lab/standalone.html
