@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Лабораторная работа №1 · Цветовые модели</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23161924'/%3E%3Ccircle cx='12' cy='12' r='8' fill='%23ff5277'/%3E%3Ccircle cx='21' cy='18' r='8' fill='%234aa8ff'/%3E%3C/svg%3E"
+    />
+    <style>
+      :root {
+        --ink: #202332;
+        --muted: #606678;
+        --line: #e1e4ed;
+        --accent: #5849d4;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f4f6fb;
+        color: var(--ink);
+        font:
+          16px/1.6 -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      main {
+        max-width: 1380px;
+        margin: auto;
+        padding: 28px 4%;
+      }
+      .workspace {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        gap: 20px;
+      }
+      .preview,
+      .model {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px;
+      }
+      .preview {
+        align-self: start;
+        padding: 16px;
+      }
+      #swatch {
+        height: 190px;
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: #7165f5;
+        color: white;
+      }
+      #swatch strong {
+        font-size: 30px;
+        letter-spacing: 1px;
+      }
+      #swatch span {
+        font-size: 14px;
+      }
+      .hexrow {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 18px;
+      }
+      .hexrow input {
+        width: 103px;
+        min-width: 0;
+      }
+      .hexrow button {
+        font-size: 14px;
+        padding: 8px;
+      }
+      .small {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.5;
+        margin: 10px 0;
+      }
+      .palettebar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 16px 0;
+      }
+      .presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+      }
+      .presets button {
+        width: 29px;
+        height: 29px;
+        padding: 0;
+        border: 1px solid #aaa;
+        border-radius: 50%;
+      }
+      .models {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        align-items: start;
+      }
+      .model {
+        min-width: 0;
+        padding: 20px 16px;
+      }
+      .modeltop {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .modeltop h3 {
+        margin: 0;
+        font-size: 22px;
+      }
+      .tag {
+        font-size: 12px;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .modeldesc {
+        font-size: 14px;
+        color: var(--muted);
+        margin: 8px 0 20px;
+      }
+      .channel {
+        margin: 17px 0;
+      }
+      .fieldtop {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        align-items: center;
+      }
+      .fieldtop label {
+        font-size: 14px;
+        font-weight: 600;
+        min-width: 0;
+      }
+      .numwrap {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        flex-shrink: 0;
+        font-size: 14px;
+        color: var(--muted);
+      }
+      input[type="number"] {
+        width: 75px;
+      }
+      input[type="number"],
+      #hex {
+        font: 14px/1.3 monospace;
+        padding: 8px;
+        border: 1px solid #cdd2df;
+        border-radius: 6px;
+        background: #fafbfe;
+        color: var(--ink);
+      }
+      input[type="range"] {
+        display: block;
+        width: 100%;
+        margin: 10px 0 0;
+        accent-color: var(--accent);
+        height: 22px;
+        cursor: pointer;
+        border-radius: 12px;
+      }
+      input[type="color"] {
+        width: 46px;
+        height: 34px;
+        border: 1px solid var(--line);
+        padding: 2px;
+        border-radius: 6px;
+        background: white;
+        cursor: pointer;
+      }
+      button {
+        font: inherit;
+        border: 1px solid #d7d9e7;
+        background: #f5f4ff;
+        color: #4b3bc0;
+        padding: 9px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      button:hover {
+        filter: brightness(0.95);
+      }
+      :focus-visible {
+        outline: 3px solid #8c81f6;
+        outline-offset: 3px;
+      }
+      .modelpalette {
+        margin: 20px 0 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+      }
+      .svpad {
+        position: relative;
+        width: 100%;
+        height: 160px;
+        border: 1px solid #bbb;
+        border-radius: 8px;
+        touch-action: none;
+        cursor: crosshair;
+        overflow: hidden;
+      }
+      .cursor {
+        position: absolute;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        border: 2px solid white;
+        box-shadow: 0 0 0 1px black;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+      .palette-axes {
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--muted);
+        margin: 8px 0;
+      }
+      .palette-hue {
+        display: block;
+        margin-top: 12px;
+        font-size: 14px;
+      }
+      .huebar {
+        background: linear-gradient(
+          to right,
+          red,
+          yellow,
+          lime,
+          cyan,
+          blue,
+          magenta,
+          red
+        );
+      }
+      #status {
+        font-size: 14px;
+        min-height: 24px;
+        color: #5144bd;
+      }
+      @media (max-width: 1100px) {
+        .workspace {
+          grid-template-columns: 1fr;
+        }
+        .preview {
+          display: grid;
+          grid-template-columns: 240px minmax(0, 1fr);
+          column-gap: 20px;
+        }
+        #swatch {
+          grid-row: span 5;
+        }
+        .models {
+          gap: 12px;
+        }
+        .hexrow {
+          justify-content: flex-start;
+        }
+      }
+      @media (max-width: 760px) {
+        main {
+          padding: 20px 5%;
+        }
+        .models {
+          grid-template-columns: 1fr;
+        }
+        .preview {
+          display: block;
+        }
+        #swatch {
+          height: 180px;
+        }
+        .model {
+          padding: 20px;
+        }
+        .hexrow {
+          flex-wrap: wrap;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section id="lab">
+        <div class="workspace">
+          <aside class="preview">
+            <div id="swatch">
+              <span id="swatchLabel">Текущий цвет</span
+              ><strong id="hexBig">#7165F5</strong>
+            </div>
+            <div class="hexrow">
+              <label for="hex">HEX</label
+              ><input
+                id="hex"
+                value="#7165F5"
+                maxlength="7"
+                spellcheck="false"
+                aria-describedby="hexHint"
+              /><button id="copy">Копировать</button>
+            </div>
+            <p id="hexHint" class="small">Шесть цифр 0–9, A–F: например, #FF8000.</p>
+            <div class="palettebar">
+              <label for="picker">Палитра браузера</label
+              ><input type="color" id="picker" value="#7165f5" />
+            </div>
+            <div class="presets" id="presets" aria-label="Примеры цветов"></div>
+            <div id="status" role="status" aria-live="polite"></div>
+          </aside>
+          <div class="models" id="models"></div>
+        </div>
+      </section>
+    </main>
+    <script>
+      (function (root, factory) {
+        "use strict";
+        const api = factory();
+        if (typeof module === "object" && module.exports) module.exports = api;
+        else root.ColorMath = api;
+      })(globalThis, function () {
+        "use strict";
+        const clamp = (x, min, max) => Math.min(max, Math.max(min, x));
+        const angle = (h) => ((h % 360) + 360) % 360;
+
+        function cmykToRgb([c, m, y, k]) {
+          return [c, m, y].map((channel) => 255 * (1 - channel / 100) * (1 - k / 100));
+        }
+
+        function rgbToCmyk(rgb) {
+          const [r, g, b] = rgb.map((channel) => channel / 255);
+          const max = Math.max(r, g, b);
+          if (max === 0) return [0, 0, 0, 100];
+
+          return [
+            ((max - r) / max) * 100,
+            ((max - g) / max) * 100,
+            ((max - b) / max) * 100,
+            (1 - max) * 100,
+          ];
+        }
+
+        function hsvToRgb([h, s, v]) {
+          h = angle(h);
+          s /= 100;
+          v /= 100;
+          const c = v * s;
+          const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+          const m = v - c;
+          const components =
+            h < 60
+              ? [c, x, 0]
+              : h < 120
+                ? [x, c, 0]
+                : h < 180
+                  ? [0, c, x]
+                  : h < 240
+                    ? [0, x, c]
+                    : h < 300
+                      ? [x, 0, c]
+                      : [c, 0, x];
+          return components.map((channel) => (channel + m) * 255);
+        }
+
+        function rgbToHsv([r, g, b], previousHue = 0) {
+          const max = Math.max(r, g, b);
+          const min = Math.min(r, g, b);
+          const delta = max - min;
+          let h = previousHue;
+
+          if (delta !== 0) {
+            h =
+              max === r
+                ? 60 * ((g - b) / delta)
+                : max === g
+                  ? 60 * ((b - r) / delta + 2)
+                  : 60 * ((r - g) / delta + 4);
+          }
+          return [angle(h), max === 0 ? 0 : (delta / max) * 100, (max / 255) * 100];
+        }
+
+        function rgbToHex(rgb) {
+          return (
+            "#" +
+            rgb
+              .map((channel) =>
+                Math.round(clamp(channel, 0, 255))
+                  .toString(16)
+                  .padStart(2, "0"),
+              )
+              .join("")
+              .toUpperCase()
+          );
+        }
+
+        function hexToRgb(hex) {
+          return typeof hex === "string" && /^#[\da-f]{6}$/i.test(hex)
+            ? [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16))
+            : null;
+        }
+
+        return Object.freeze({
+          clamp,
+          angle,
+          cmykToRgb,
+          rgbToCmyk,
+          hsvToRgb,
+          rgbToHsv,
+          rgbToHex,
+          hexToRgb,
+        });
+      });
+    </script>
+    <script>
+      "use strict";
+      const {
+        clamp,
+        angle,
+        cmykToRgb,
+        rgbToCmyk,
+        hsvToRgb,
+        rgbToHsv,
+        rgbToHex,
+        hexToRgb,
+      } = ColorMath;
+      const state = { rgb: [113, 101, 245], cmyk: [], hsv: [] };
+      state.cmyk = rgbToCmyk(state.rgb);
+      state.hsv = rgbToHsv(state.rgb);
+      const specs = {
+        rgb: {
+          name: "RGB",
+          desc: "Красный · зелёный · синий",
+          channels: ["R", "G", "B"],
+          max: [255, 255, 255],
+          unit: ["", "", ""],
+          title: ["Красный", "Зелёный", "Синий"],
+        },
+        cmyk: {
+          name: "CMYK",
+          desc: "Голубой · пурпурный · жёлтый · чёрный",
+          channels: ["C", "M", "Y", "K"],
+          max: [100, 100, 100, 100],
+          unit: ["%", "%", "%", "%"],
+          title: ["Голубая краска", "Пурпурная краска", "Жёлтая краска", "Чёрная краска"],
+        },
+        hsv: {
+          name: "HSV",
+          desc: "Тон · насыщенность · значение",
+          channels: ["H", "S", "V"],
+          max: [360, 100, 100],
+          unit: ["°", "%", "%"],
+          title: ["Цветовой тон", "Насыщенность", "Value: максимум RGB"],
+        },
+      };
+      const fmt = (n) => String(Math.round(n * 100) / 100);
+      function update(model, values, active) {
+        state[model] = values.slice();
+        if (model === "rgb") {
+          state.cmyk = rgbToCmyk(values);
+          state.hsv = rgbToHsv(values, state.hsv[0]);
+        } else if (model === "cmyk") {
+          state.rgb = cmykToRgb(values);
+          state.hsv = rgbToHsv(state.rgb, state.hsv[0]);
+        } else {
+          state.rgb = hsvToRgb(values);
+          state.cmyk = rgbToCmyk(state.rgb);
+        }
+        render(active);
+      }
+      function paletteValues(model, x, y) {
+        return [state.hsv[0], clamp(x, 0, 1) * 100, (1 - clamp(y, 0, 1)) * 100];
+      }
+      function choosePalette(model, hsv, active) {
+        const rgb = hsvToRgb(hsv);
+        if (model === "hsv") update("hsv", hsv, active);
+        else {
+          update(model, model === "rgb" ? rgb : rgbToCmyk(rgb), active);
+          state.hsv = hsv.slice();
+          render(active);
+        }
+      }
+      function setHex(hex) {
+        const rgb = hexToRgb(hex);
+        if (!rgb) return false;
+        update("rgb", rgb);
+        return true;
+      }
+      function build() {
+        const models = document.getElementById("models");
+        for (const [key, spec] of Object.entries(specs)) {
+          const card = document.createElement("article");
+          card.className = "model";
+          card.innerHTML = `<div class="modeltop"><h3>${spec.name}</h3><span class="tag">${spec.channels.length} канала</span></div><p class="modeldesc">${spec.desc}</p>`;
+          spec.channels.forEach((ch, i) => {
+            const id = key + "-" + ch;
+            const row = document.createElement("div");
+            row.className = "channel";
+            row.innerHTML = `<div class="fieldtop"><label for="${id}-num" title="${spec.title[i]}">${ch} · ${spec.title[i]}</label><span class="numwrap"><input id="${id}-num" type="number" min="0" max="${spec.max[i]}" step="any" aria-label="${spec.name}: ${spec.title[i]}"><span>${spec.unit[i]}</span></span></div><input id="${id}-range" type="range" min="0" max="${spec.max[i]}" step="${key === "rgb" ? "1" : "0.1"}" aria-label="${spec.name}: ползунок ${spec.title[i]}">`;
+            card.appendChild(row);
+            for (const suffix of ["num", "range"]) {
+              const el = row.querySelector("#" + id + "-" + suffix);
+              el.addEventListener("input", () => {
+                if (el.value.trim() === "") return;
+                const n = Number(el.value);
+                if (!Number.isFinite(n) || n < 0 || n > spec.max[i]) {
+                  el.setCustomValidity(`Введите число от 0 до ${spec.max[i]}`);
+                  el.reportValidity();
+                  return;
+                }
+                el.setCustomValidity("");
+                const vals = state[key].slice();
+                vals[i] = n;
+                update(key, vals, el);
+              });
+              el.addEventListener("change", () => {
+                el.setCustomValidity("");
+                render();
+              });
+            }
+          });
+          const label = document.createElement("label");
+          label.className = "modelpalette";
+          label.innerHTML = `Выбрать цвет<input type="color" id="${key}-picker" aria-label="Выбрать цвет в модели ${spec.name}">`;
+          label.querySelector("input").addEventListener("input", (e) => {
+            const rgb = hexToRgb(e.target.value);
+            update(
+              key,
+              key === "rgb"
+                ? rgb
+                : key === "cmyk"
+                  ? rgbToCmyk(rgb)
+                  : rgbToHsv(rgb, state.hsv[0]),
+            );
+          });
+          card.appendChild(label);
+          if (key === "hsv") {
+            const heading = document.createElement("p");
+            heading.className = "palette-axes";
+            heading.textContent = "Насыщенность → · Светлее сверху, темнее снизу";
+            card.appendChild(heading);
+            const pad = document.createElement("div");
+            pad.id = key + "-svpad";
+            pad.className = "svpad";
+            pad.setAttribute(
+              "aria-label",
+              heading.textContent + "; для клавиатуры доступны ползунки каналов",
+            );
+            pad.innerHTML = `<span id="${key}-svcursor" class="cursor"></span>`;
+            const pick = (e) => {
+              const r = pad.getBoundingClientRect();
+              choosePalette(
+                key,
+                paletteValues(
+                  key,
+                  (e.clientX - r.left) / r.width,
+                  (e.clientY - r.top) / r.height,
+                ),
+              );
+            };
+            pad.addEventListener("pointerdown", (e) => {
+              pad.setPointerCapture(e.pointerId);
+              pick(e);
+            });
+            pad.addEventListener("pointermove", (e) => {
+              if (pad.hasPointerCapture(e.pointerId)) pick(e);
+            });
+            pad.addEventListener("pointerup", (e) => {
+              if (pad.hasPointerCapture(e.pointerId))
+                pad.releasePointerCapture(e.pointerId);
+            });
+            card.appendChild(pad);
+            {
+              const hueLabel = document.createElement("label");
+              hueLabel.className = "palette-hue";
+              hueLabel.innerHTML = `<span>Тон H</span><input id="${key}-palette-hue" class="huebar" type="range" min="0" max="360" step="0.1" aria-label="${spec.name}: тон палитры">`;
+              hueLabel
+                .querySelector("#" + key + "-palette-hue")
+                .addEventListener("input", (e) =>
+                  choosePalette(
+                    key,
+                    [Number(e.target.value), state.hsv[1], state.hsv[2]],
+                    e.target,
+                  ),
+                );
+              card.appendChild(hueLabel);
+            }
+            const hint = document.createElement("p");
+            hint.id = key + "-palette-caption";
+            hint.className = "small";
+            card.appendChild(hint);
+          }
+          models.appendChild(card);
+        }
+        const presets = [
+          "#FF0000",
+          "#00FF00",
+          "#0000FF",
+          "#00FFFF",
+          "#FF00FF",
+          "#FFFF00",
+          "#FF8000",
+          "#7165F5",
+          "#FFFFFF",
+          "#808080",
+          "#000000",
+        ];
+        for (const hex of presets) {
+          const b = document.createElement("button");
+          b.style.background = hex;
+          b.title = hex;
+          b.setAttribute("aria-label", "Выбрать " + hex);
+          b.addEventListener("click", () => setHex(hex));
+          document.getElementById("presets").appendChild(b);
+        }
+      }
+      function render(active) {
+        const hex = rgbToHex(state.rgb);
+        const swatch = document.getElementById("swatch");
+        swatch.style.background = hex;
+        swatch.style.color =
+          state.rgb[0] * 0.299 + state.rgb[1] * 0.587 + state.rgb[2] * 0.114 > 155
+            ? "#151724"
+            : "#fff";
+        document.getElementById("hexBig").textContent = hex;
+        if (active !== document.getElementById("hex"))
+          document.getElementById("hex").value = hex;
+        document.getElementById("picker").value = hex;
+        for (const [key, spec] of Object.entries(specs)) {
+          spec.channels.forEach((ch, i) => {
+            for (const suffix of ["num", "range"]) {
+              const el = document.getElementById(key + "-" + ch + "-" + suffix);
+              if (el !== active) el.value = fmt(state[key][i]);
+            }
+            const range = document.getElementById(key + "-" + ch + "-range");
+            const a = state[key].slice(),
+              b = state[key].slice();
+            a[i] = 0;
+            b[i] = spec.max[i];
+            const toRGB = (v) =>
+              key === "rgb" ? v : key === "cmyk" ? cmykToRgb(v) : hsvToRgb(v);
+            range.style.background =
+              key === "hsv" && i === 0
+                ? "linear-gradient(to right,red,yellow,lime,cyan,blue,magenta,red)"
+                : `linear-gradient(to right,${rgbToHex(toRGB(a))},${rgbToHex(toRGB(b))})`;
+          });
+          document.getElementById(key + "-picker").value = hex;
+        }
+        {
+          const key = "hsv";
+          const pad = document.getElementById(key + "-svpad"),
+            marker = document.getElementById(key + "-svcursor"),
+            caption = document.getElementById(key + "-palette-caption");
+          pad.style.background = `linear-gradient(to top,black,transparent),linear-gradient(to right,white,transparent),${rgbToHex(hsvToRgb([state.hsv[0], 100, 100]))}`;
+          pad.style.backgroundBlendMode = "normal";
+          marker.style.left = state.hsv[1] + "%";
+          marker.style.top = 100 - state.hsv[2] + "%";
+          const hue = document.getElementById(key + "-palette-hue");
+          if (hue !== active) hue.value = fmt(state.hsv[0]);
+          caption.textContent = "Выберите тон на полосе, затем цвет в квадрате.";
+        }
+      }
+
+      build();
+      render();
+      document
+        .getElementById("picker")
+        .addEventListener("input", (e) => setHex(e.target.value));
+      const hexInput = document.getElementById("hex");
+      hexInput.addEventListener("input", () => {
+        const rgb = hexToRgb(hexInput.value);
+        hexInput.setCustomValidity(rgb ? "" : "Формат: # и шесть цифр 0–9 или букв A–F");
+        if (rgb) update("rgb", rgb, hexInput);
+      });
+      hexInput.addEventListener("change", () => {
+        if (!hexToRgb(hexInput.value)) hexInput.reportValidity();
+        else render();
+      });
+      document.getElementById("copy").addEventListener("click", async () => {
+        const hex = rgbToHex(state.rgb),
+          status = document.getElementById("status");
+        try {
+          if (!navigator.clipboard?.writeText) throw Error();
+          await navigator.clipboard.writeText(hex);
+          status.textContent = "Скопировано: " + hex;
+        } catch {
+          hexInput.focus();
+          hexInput.select();
+          status.textContent = "Цвет выделен. Нажмите Ctrl+C / ⌘C.";
+        }
+      });
+    </script>
+  </body>
+</html>

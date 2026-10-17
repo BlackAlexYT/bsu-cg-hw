@@ -1,0 +1,121 @@
+% Сборка: lualatex lab1-report.tex
+\documentclass[11pt,a4paper]{article}
+\usepackage[a4paper,margin=2cm,top=1.6cm,bottom=1.8cm]{geometry}
+\usepackage{fontspec}
+\usepackage[russian]{babel}
+\usepackage{amsmath}
+\usepackage{unicode-math}
+\setmainfont{Liberation Serif}
+\setmonofont{Liberation Mono}[Scale=MatchLowercase]
+\setmathfont{TeX Gyre Termes Math}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{microtype}
+
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{1.0ex plus .3ex}{0.5ex}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\pagestyle{plain}
+
+\usepackage[hidelinks,pdftitle={Лабораторная работа № 1. Цветовые модели},pdfauthor={Aliaksei Charnukha}]{hyperref}
+
+\newcommand{\xmax}{x_{\max}}
+\newcommand{\xmin}{x_{\min}}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries Лабораторная работа № 1}\\[0.4em]
+  {\large Цветовые модели. Чётный вариант: CMYK — RGB — HSV}
+\end{center}
+
+\section{Цель}
+Реализовать интерактивное преобразование цвета между моделями CMYK, RGB и HSV.
+
+\section{Основные формулы}
+RGB задаётся в диапазоне $0\text{–}255$, CMYK, $S$ и $V$ — в процентах
+$0\text{–}100$, $H$ — в градусах $0\text{–}360$. В формулах ниже
+$r, g, b, c, m, y, k, s, v$ нормированы к отрезку $[0, 1]$:
+\[
+  r = \frac{R}{255}, \qquad g = \frac{G}{255}, \qquad b = \frac{B}{255}.
+\]
+
+\textbf{RGB $\to$ CMYK.} $\xmax = \max(r, g, b)$:
+\[
+  k = 1 - \xmax, \qquad
+  c = \frac{\xmax - r}{\xmax}, \qquad
+  m = \frac{\xmax - g}{\xmax}, \qquad
+  y = \frac{\xmax - b}{\xmax}.
+\]
+При $\xmax = 0$ полагаем $c = m = y = 0$, $k = 1$.
+
+\textbf{CMYK $\to$ RGB.}
+\[
+  R = 255\,(1 - c)(1 - k), \qquad
+  G = 255\,(1 - m)(1 - k), \qquad
+  B = 255\,(1 - y)(1 - k).
+\]
+
+\textbf{RGB $\to$ HSV.} $\xmax = \max(r, g, b)$, $\xmin = \min(r, g, b)$,
+$\Delta = \xmax - \xmin$:
+\[
+  v = \xmax, \qquad
+  s = \begin{cases} 0, & \xmax = 0,\\[2pt] \dfrac{\Delta}{\xmax}, & \xmax > 0, \end{cases}
+  \qquad
+  H = \begin{cases}
+    60 \cdot \dfrac{g - b}{\Delta}, & \xmax = r,\\[8pt]
+    60 \cdot \left(\dfrac{b - r}{\Delta} + 2\right), & \xmax = g,\\[8pt]
+    60 \cdot \left(\dfrac{r - g}{\Delta} + 4\right), & \xmax = b,
+  \end{cases}
+  \quad (\Delta \neq 0).
+\]
+$H$ приводится к промежутку $[0, 360)$. При $\Delta = 0$ тон не определён.
+
+\textbf{HSV $\to$ RGB.}
+\[
+  C = v \cdot s, \qquad
+  X = C \left(1 - \left| \left(\frac{H}{60} \bmod 2\right) - 1 \right|\right), \qquad
+  d = v - C.
+\]
+Для шести последовательных секторов по $60^\circ$ выбирается тройка $(r', g', b')$:
+\[
+  (C, X, 0),\; (X, C, 0),\; (0, C, X),\; (0, X, C),\; (X, 0, C),\; (C, 0, X),
+\]
+после чего $(R, G, B) = 255 \cdot (r' + d,\; g' + d,\; b' + d)$.
+
+\section{Ход работы}
+Приложение написано на HTML, CSS и JavaScript. Изменение CMYK или HSV
+переводится в RGB, из которого пересчитываются остальные модели.
+
+Координаты задаются числовыми полями, ползунками и системной палитрой, для HSV
+есть цветовой квадрат с полосой тона. Цвет показывается образцом и HEX-кодом.
+Некорректный ввод игнорируется, значения округляются только при выводе.
+
+Формулы вынесены в отдельный модуль и проверены юнит-тестами.
+
+\section{Результаты}
+\begin{itemize}[label=--, leftmargin=1.5em, itemsep=0.2em, topsep=0.2em]
+  \item Разработано веб-приложение для пересчёта цвета между моделями CMYK,
+        RGB и HSV; изменение любой координаты сразу пересчитывает две другие модели.
+  \item Реализованы три способа ввода: числовые поля, ползунки и системная
+        палитра; для HSV добавлен цветовой квадрат с полосой тона.
+  \item Формулы вынесены в отдельный модуль и проверены 40 юнит-тестами, в том
+        числе на 529 эталонах стандартной библиотеки Python \texttt{colorsys}.
+\end{itemize}
+
+\section{Выводы}
+\begin{itemize}[label=--, leftmargin=1.5em, itemsep=0.2em, topsep=0.2em]
+  \item RGB удобно использовать как промежуточную модель: переход
+        CMYK $\leftrightarrow$ HSV сводится к двум преобразованиям через RGB.
+  \item Переход RGB $\to$ CMYK неоднозначен: один цвет можно получить разными
+        сочетаниями красок. Выбирается вариант с максимальным $K$. Учебная
+        формула без ICC-профиля не описывает реальную печать.
+  \item У серых цветов ($\Delta = 0$) тон $H$ не определён, поэтому при
+        пересчёте сохраняется предыдущий тон, и ползунок $H$ не сбрасывается.
+  \item HSV удобнее для выбора цвета человеком: тон, насыщенность и яркость
+        меняются независимо, поэтому цвет проще подобрать мышью на цветовом
+        квадрате, чем числами RGB.
+\end{itemize}
+
+\end{document}

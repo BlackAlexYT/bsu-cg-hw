@@ -1,0 +1,9 @@
+{
+  "name": "color-lab",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "build": "node scripts/build.cjs"
+  },
+  "engines": { "node": ">=18" }
+}

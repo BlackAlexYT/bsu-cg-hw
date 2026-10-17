@@ -1,0 +1,6 @@
+lab1/report/*.aux
+lab1/report/*.log
+lab1/report/*.out
+lab1/report/*.pdf
+lab1/color-lab/standalone.html
+lab1/node_modules/
