@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Лабораторная работа №3 · Растровые алгоритмы</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23161924'/%3E%3Crect x='6' y='20' width='6' height='6' fill='%23fff'/%3E%3Crect x='13' y='13' width='6' height='6' fill='%23fff'/%3E%3Crect x='20' y='6' width='6' height='6' fill='%23fff'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <header class="top">
+        <h1>Лабораторная работа №3</h1>
+        <p>Базовые растровые алгоритмы: пошаговый, ЦДА, Брезенхем (отрезок и окружность), Кастл — Питвей, сглаживание Ву</p>
+      </header>
+      <div class="workspace">
+        <aside class="panel side">
+          <h2>Алгоритм</h2>
+          <div class="algos" id="algos"></div>
+          <p class="small" id="algoInfo"></p>
+
+          <h2 id="figTitle">Отрезок</h2>
+          <div class="coords" id="lineInputs">
+            <label>x₀ <input type="number" id="x0" step="1" /></label>
+            <label>y₀ <input type="number" id="y0" step="1" /></label>
+            <label>x₁ <input type="number" id="x1" step="1" /></label>
+            <label>y₁ <input type="number" id="y1" step="1" /></label>
+          </div>
+          <div class="coords" id="circleInputs">
+            <label><span>x<sub>c</sub></span> <input type="number" id="xc" step="1" /></label>
+            <label><span>y<sub>c</sub></span> <input type="number" id="yc" step="1" /></label>
+            <label>R <input type="number" id="r" step="1" min="0" /></label>
+          </div>
+          <p class="hint" id="clickHint"></p>
+          <div class="row">
+            <button id="example">Пример из отчёта</button>
+            <button id="random">Случайный</button>
+          </div>
+
+          <h2>Вид</h2>
+          <div class="fieldtop">
+            <label for="zoom">Масштаб, пикс. на клетку</label><span id="zoomVal" class="mono"></span>
+          </div>
+          <input id="zoom" type="range" min="4" max="80" step="1" value="32" />
+          <label class="check"><input type="checkbox" id="showIdeal" checked /> Идеальная линия</label>
+          <label class="check"><input type="checkbox" id="showCenters" checked /> Центры пикселей</label>
+          <label class="check"><input type="checkbox" id="showOrder" /> Номера шагов в клетках</label>
+          <div class="row">
+            <button id="fit">Показать фигуру целиком</button>
+          </div>
+          <p class="hint">Колесо мыши — масштаб, перетаскивание — сдвиг.</p>
+        </aside>
+
+        <section class="panel">
+          <div class="note">
+            <b>Привязка координат к сетке.</b> Пиксель (x, y) — клетка 1×1 с центром в целой точке (x, y).
+            Линии сетки проходят по полуцелым координатам x = k ± ½, y = k ± ½, а оси — через центры клеток
+            столбца x = 0 и строки y = 0. Ось y направлена вверх, как в математике. Алгоритм выбирает клетки, центры
+            которых ближе всего к идеальной линии.
+          </div>
+          <canvas id="cv"></canvas>
+          <div class="statusbar">
+            <div id="stats"></div>
+            <div id="probe" class="mono">Наведите курсор на сетку</div>
+          </div>
+
+          <h3>Вычисления по шагам</h3>
+          <p class="small" id="calcInfo"></p>
+          <div class="tablewrap"><table id="calc"></table></div>
+
+          <h3>Замер времени</h3>
+          <p class="small">
+            Каждый алгоритм строит один и тот же набор из 20 000 случайных фигур (концы отрезков и центры окружностей в
+            квадрате ±500, радиусы 1…500), берётся лучшее из 7 прогонов. Пиксели не рисуются, а только
+            суммируются, так что меряется сам алгоритм.
+          </p>
+          <div class="row"><button id="bench">Замерить</button><span id="benchStatus" class="small"></span></div>
+          <div class="tablewrap"><table id="benchTable"></table></div>
+        </section>
+      </div>
+    </main>
+    <script src="raster.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

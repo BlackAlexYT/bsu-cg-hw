@@ -1,0 +1,11 @@
+{
+  "name": "raster-lab",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "bench": "node scripts/benchmark.cjs",
+    "figures": "node scripts/report-figures.cjs",
+    "build": "node scripts/build.cjs"
+  },
+  "engines": { "node": ">=18" }
+}

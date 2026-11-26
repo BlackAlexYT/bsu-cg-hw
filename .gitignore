@@ -9,3 +9,8 @@ lab2/report/*.log
 lab2/report/*.out
 lab2/report/*.pdf
 lab2/segment-lab/standalone.html
+lab3/report/*.aux
+lab3/report/*.log
+lab3/report/*.out
+lab3/report/*.pdf
+lab3/raster-lab/standalone.html
