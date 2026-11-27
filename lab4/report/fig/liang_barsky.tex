@@ -1,0 +1,23 @@
+\begin{tikzpicture}[scale=0.48]
+  \draw[step=1,gridc!55,very thin] (-2.5,-0.5) grid (10.5,7.5);
+  \draw[->,black!60] (-2.5,0) -- (10.7,0) node[right]{\scriptsize $x$};
+  \draw[->,black!60] (0,-0.5) -- (0,7.7) node[above]{\scriptsize $y$};
+  \fill[winc,opacity=0.10] (1,2) rectangle (7,6);
+  \draw[winc,thick] (1,2) rectangle (7,6);
+  \draw[origc,dashed,thick] (-2,1) -- (10,7);
+  \draw[visc,ultra thick] (1,2.5) -- (7,5.5);
+  \fill[visc] (1,2.5) circle (3.2pt);
+  \fill[visc] (7,5.5) circle (3.2pt);
+  \fill[black!70] (-2,1) circle (2.5pt) node[below left]{\scriptsize $P_0$};
+  \fill[black!70] (10,7) circle (2.5pt) node[above right]{\scriptsize $P_1$};
+  \draw[origc,dashed,thick] (2,3) -- (5,5);
+  \draw[visc,ultra thick] (2,3) -- (5,5);
+  \fill[visc] (2,3) circle (3.2pt);
+  \fill[visc] (5,5) circle (3.2pt);
+  \draw[origc,dashed,thick] (4,0) -- (9,4);
+  \draw[visc,ultra thick] (6.5,2) -- (7,2.4);
+  \fill[visc] (6.5,2) circle (3.2pt);
+  \fill[visc] (7,2.4) circle (3.2pt);
+  \draw[rejc,dashed,thick] (0,7) -- (8,7);
+  \draw[rejc,dashed,thick] (7.5,1) -- (10,5);
+\end{tikzpicture}

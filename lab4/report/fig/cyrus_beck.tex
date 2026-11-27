@@ -1,0 +1,30 @@
+\begin{tikzpicture}[scale=0.48]
+  \draw[step=1,gridc!55,very thin] (-1.5,-0.5) grid (9.5,7.5);
+  \draw[->,black!60] (-1.5,0) -- (9.7,0) node[right]{\scriptsize $x$};
+  \draw[->,black!60] (0,-0.5) -- (0,7.7) node[above]{\scriptsize $y$};
+  \fill[winc,opacity=0.10] (1,1) -- (6,1) -- (8,4) -- (5,7) -- (1,5) -- cycle;
+  \draw[winc,thick] (1,1) -- (6,1) -- (8,4) -- (5,7) -- (1,5) -- cycle;
+  \draw[->,winc!80,thin] (3.5,1) -- (3.5,1.75);
+  \draw[->,winc!80,thin] (7,2.5) -- (6.376,2.916);
+  \draw[->,winc!80,thin] (6.5,5.5) -- (5.97,4.97);
+  \draw[->,winc!80,thin] (3,6) -- (3.335,5.329);
+  \draw[->,winc!80,thin] (1,3) -- (1.75,3);
+  \draw[origc,dashed,thick] (-1,1) -- (9,6);
+  \draw[visc,ultra thick] (1,2) -- (7,5);
+  \fill[visc] (1,2) circle (3.2pt);
+  \fill[visc] (7,5) circle (3.2pt);
+  \fill[black!70] (-1,1) circle (2.5pt) node[below left]{\scriptsize $P_0$};
+  \fill[black!70] (9,6) circle (2.5pt) node[above right]{\scriptsize $P_1$};
+  \draw[origc,dashed,thick] (2,2) -- (5,5);
+  \draw[visc,ultra thick] (2,2) -- (5,5);
+  \fill[visc] (2,2) circle (3.2pt);
+  \fill[visc] (5,5) circle (3.2pt);
+  \draw[origc,dashed,thick] (0,6.5) -- (8,6.5);
+  \draw[visc,ultra thick] (4,6.5) -- (5.5,6.5);
+  \fill[visc] (4,6.5) circle (3.2pt);
+  \fill[visc] (5.5,6.5) circle (3.2pt);
+  \draw[origc,dashed,thick] (3,0) -- (8,2);
+  \draw[visc,ultra thick] (5.5,1) -- (6.182,1.273);
+  \fill[visc] (5.5,1) circle (3.2pt);
+  \fill[visc] (6.182,1.273) circle (3.2pt);
+\end{tikzpicture}

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Лабораторная работа №4 · Алгоритмы отсечения</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23161924'/%3E%3Crect x='8' y='8' width='16' height='16' fill='none' stroke='%2360a5fa' stroke-width='2.5'/%3E%3Cline x1='4' y1='26' x2='28' y2='6' stroke='%2322c55e' stroke-width='2.5'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <header class="top">
+        <h1>Лабораторная работа №4</h1>
+        <p>Алгоритмы отсечения отрезков: Лианга — Барски (прямоугольное окно) и Кируса — Бека (выпуклый многоугольник)</p>
+      </header>
+      <div class="workspace">
+        <aside class="panel side">
+          <h2>Алгоритм</h2>
+          <div class="algos" id="algos"></div>
+          <p class="small" id="algoInfo"></p>
+
+          <h2 id="clipperTitle">Отсекающее окно</h2>
+          <div class="coords" id="rectInputs">
+            <label>X<sub>min</sub> <input type="number" id="xmin" step="any" /></label>
+            <label>Y<sub>min</sub> <input type="number" id="ymin" step="any" /></label>
+            <label>X<sub>max</sub> <input type="number" id="xmax" step="any" /></label>
+            <label>Y<sub>max</sub> <input type="number" id="ymax" step="any" /></label>
+          </div>
+          <div id="polyInputs" hidden>
+            <label class="fieldlabel" for="polyText">Вершины (x y по одной в строке)</label>
+            <textarea id="polyText" rows="5" spellcheck="false"></textarea>
+            <p class="small" id="polyStatus"></p>
+          </div>
+
+          <h2>Входные данные (формат файла)</h2>
+          <div class="row">
+            <label class="filebtn">
+              Загрузить .txt
+              <input type="file" id="fileInput" accept=".txt,.dat,text/plain" hidden />
+            </label>
+            <button id="applyText">Применить</button>
+          </div>
+          <textarea id="rawInput" rows="7" spellcheck="false"></textarea>
+          <p class="err" id="parseError" hidden></p>
+          <div class="row">
+            <button id="example">Пример из отчёта</button>
+            <button id="random">Случайные</button>
+          </div>
+
+          <h2>Управление холстом</h2>
+          <label class="check"><input type="checkbox" id="drawMode" /> Добавлять отрезки кликами</label>
+          <label class="check"><input type="checkbox" id="showLabels" checked /> Подписи точек и t₀, t₁</label>
+          <div class="row">
+            <button id="fit">Показать целиком</button>
+            <button id="clearSegs">Очистить отрезки</button>
+          </div>
+          <p class="hint">Колесо мыши — масштаб, перетаскивание — сдвиг, клик по отрезку — разбор шагов.</p>
+        </aside>
+
+        <section class="panel">
+          <div class="legend">
+            <span><i class="swatch win"></i>Отсекатель</span>
+            <span><i class="swatch orig"></i>Исходный отрезок (отсечённая часть)</span>
+            <span><i class="swatch vis"></i>Видимая часть</span>
+            <span><i class="swatch rej"></i>Полностью невидимый</span>
+          </div>
+          <canvas id="cv"></canvas>
+          <div class="statusbar">
+            <span id="summary"></span>
+            <span class="bench">
+              <button id="benchBtn">Замерить время</button>
+              <span id="benchOut" class="mono"></span>
+            </span>
+          </div>
+          <div class="segbar" id="segbar"></div>
+          <div class="tablewrap">
+            <h3 id="traceTitle">Промежуточные вычисления</h3>
+            <p class="small" id="traceSub"></p>
+            <table id="traceTable"></table>
+          </div>
+        </section>
+      </div>
+    </main>
+    <script src="clipping.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -14,3 +14,8 @@ lab3/report/*.log
 lab3/report/*.out
 lab3/report/*.pdf
 lab3/raster-lab/standalone.html
+lab4/report/*.aux
+lab4/report/*.log
+lab4/report/*.out
+lab4/report/*.pdf
+lab4/clip-lab/standalone.html
